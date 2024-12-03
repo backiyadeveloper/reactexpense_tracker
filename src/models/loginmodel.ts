@@ -1,14 +1,20 @@
-// src/models/authModels.ts
 
-// Interface for user data
-export interface User {
-    username: string;
-    password: string;
-  }
+
   
-  // Interface for decoded token payload
-  export interface TokenPayload {
-    userid: string;
-    username: string;
+  export namespace Login{
+     export interface params{
+      username: string;
+      password: string;
+     };
+     export interface retrive {
+      status: boolean;  
+      message: string;
+      data?: {
+        token: string;  
+        userid:number;
+        username:string;
+      };
+    }
+     export const name=`login`;
+     export const signupname=`user`
   }
-  

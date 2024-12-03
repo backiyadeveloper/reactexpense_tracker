@@ -104,3 +104,13 @@ form >div{
     font-weight: bold; 
     cursor: pointer;
  }
+ .incomexpens1{
+    padding: 10px 0 10px 0;
+    border-radius: 50px;
+    background-image: linear-gradient(to right,rgb(3, 253, 199),rgb(47, 157, 165),rgb(3, 253, 199));
+    box-shadow: 2px 2px 2px gray;
+    color: white;
+    width: 10rem;
+    font-size: larger;
+    border: none;
+ }

@@ -1,81 +1,23 @@
-import React, { useState } from "react";
-import { signupUser, loginUser, parseJwt } from "../../service/loginservice";
+import React from "react";
+import {loginservice} from "../../service/loginservice"
 import "./login.css"
-import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
-  const [activeForm, setActiveForm] = useState<"login" | "signup">("login");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const Navigate=useNavigate();
-  const showLogin = () => setActiveForm("login");
-  const showSignUp = () => setActiveForm("signup");
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validate password
-    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
-    if (!passwordPattern.test(password)) {
-      setErrorMessage(
-        "Password must include an uppercase letter, a digit, and a special character."
-      );
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
-      return;
-    }
-
-    const encryptedPassword = btoa(password); // Encrypt password
-    const response = await signupUser({
-      username,
-      password: encryptedPassword,
-    });
-
-    if (response.ok) {
-      setErrorMessage(""); // Clear errors
-      showLogin(); // Switch to login form
-    } else {
-      const message = await response.text();
-      setErrorMessage(message);
-    }
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const encryptedPassword = btoa(password); // Encrypt password
-    const response = await loginUser({
-      username,
-      password: encryptedPassword,
-    });
-
-    if (response.ok) {
-      const token = await response.text();
-      const payload = parseJwt(token);
-
-      // Store user details and token
-      localStorage.setItem("token", token);
-      localStorage.setItem("username", payload.username);
-      localStorage.setItem("userid", payload.userid);
-      sessionStorage.setItem("isLoggedIn", "true");
-
-      // Redirect to the home page
-      setTimeout(() => {
-        window.location.href = "/home";
-        Navigate("/home")
-      }, 100);
-    } else if (response.status === 400) {
-      setErrorMessage("Invalid username or password.");
-    } else {
-      setErrorMessage("An error occurred during login.");
-    }
-  };
-
+  const { activeForm,
+    username,
+    password,
+    confirmPassword,
+    errorMessage,
+    setUsername,
+    setPassword,
+    setConfirmPassword,
+    showLogin,
+    showSignUp,
+    handleSignup,
+    handleLogin,
+    passwordErrorMessage,
+    usernameErrorMessage,}=loginservice()
+ 
 
   return (
     <>
@@ -166,6 +108,7 @@ const Login: React.FC = () => {
                   id="logusername"
                   required
                 />
+                {usernameErrorMessage && <span className="error">{usernameErrorMessage}</span>}
                 <label htmlFor="newPassword">Password</label>
                 <input
                 type="password"
@@ -176,7 +119,7 @@ const Login: React.FC = () => {
                   className="signinput"
                   id="logpassword"
                   required
-                />
+                /> {passwordErrorMessage && <span className="error">{passwordErrorMessage}</span>}
                 <label htmlFor="confirmPassword">Confirm Password</label>
                 <input
                  type="password"

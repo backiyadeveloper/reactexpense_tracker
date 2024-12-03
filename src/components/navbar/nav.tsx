@@ -1,5 +1,6 @@
 import React from "react";
 import "./nav.css"
+import { Link } from "react-router-dom";
 import navimg from "../../assets/images.png";
 export function Navbar(){
     return(
@@ -9,14 +10,14 @@ export function Navbar(){
           <img src={navimg} className="navimg"  alt=""></img>
     
         <nav className="navtag">
-            <a href="./home.html" className="atag">Home</a>
-            <a href="./expense.html" className="atag">Expens and category</a>
-            <a href="./income.html" className="atag">Income</a>
-            <a href="./user.html" className="atag">User</a>
-            <a href="./viewbycategory.html" className="atag">view by Category</a>
-            <a href="./viewbydates.html" className="atag">view by dates</a>
-            <a href="./report.html" className="atag">Report</a>
-            <a href="./report.html"  className="atag">logout</a>
+        <Link to={"/home"} className="atag"><a >Home</a></Link>
+            <Link to={"/expense"} className="atag"><a >Expens and category</a></Link>
+           <Link to="" className="atag"> <a href="./income.html">Income</a></Link>
+            <Link to="" className="atag"><a href="./user.html">User</a></Link>
+            <Link to="" className="atag"><a href="./viewbycategory.html">view by Category</a></Link>
+            <Link to="" className="atag"><a href="./viewbydates.html">view by dates</a></Link>
+            <Link to="" className="atag"><a href="./report.html">Report</a></Link>
+           <Link to={"/logout"} className="atag"> <a  >logout</a></Link>
         </nav>
     </div>
         </>
