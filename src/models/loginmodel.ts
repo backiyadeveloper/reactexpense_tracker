@@ -1,12 +1,11 @@
+export namespace Login{
 
-
-  
-  export namespace Login{
-     export interface params{
+  export interface params{
       username: string;
       password: string;
-     };
-     export interface retrive {
+  };
+  
+  export interface retrive {
       status: boolean;  
       message: string;
       data?: {
@@ -14,7 +13,9 @@
         userid:number;
         username:string;
       };
-    }
-     export const name=`login`;
-     export const signupname=`user`
   }
+
+  export const name=`login`;
+  export const signupname=`user`;
+
+}

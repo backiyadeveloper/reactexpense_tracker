@@ -1,3 +1,4 @@
+
 .active-form {
     display: block;
   }
@@ -32,16 +33,15 @@
     display: flex;
     flex-wrap: wrap;
     width: 90%;
-    height: 60%;
+    height: 90%;
     max-width: 800px;
     background-color: white;
     border-radius: 20px;
   
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 20px 20px 5px rgba(3, 3, 3, 0.1);
 }
 
-/* Left Panel */
 .login {
     animation: backgroundAnimation 1s infinite alternate;
     flex: 1;
@@ -148,17 +148,24 @@
     }
 }
 
-@keyframes backgroundAnimation {
-    0% {
-        background-color: #c58b1f;
-    }
-    50% {
-        background-color: #0ea4d6;
-    }
-    100% {
-        background-color: #3b2a0a;
-    }
-}
+
 .error{
     color:red
 }
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .password-container input {
+    flex: 1;
+  }
+  
+  .password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  

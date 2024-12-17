@@ -1,64 +1,24 @@
-import React, { useEffect, useState } from "react";
-import {getexpense,deletedata} from "../../service/getexpenseservice"
-import {Expense} from "../../models/getexpense"
 import "./home.css"
+import {Getexpense} from "../../service/getexpenseservice"
 export function Home(){
-    const token=localStorage.getItem("token")
-    const userid=localStorage.getItem("userid")
-    const [expense,setExpense]=useState<Expense[]>([]);
-    useEffect(() => {
-        const fetchExpenses = async () => {
-        
-          if (!userid || !token) {
-            console.error("Missing user ID or token. Redirecting to login...");
-            window.location.href = "../html/signup.html";
-            return;
-          }
-    
-          try {
-            const data = await getexpense(parseInt(userid), token);
-            setExpense(data);
-            console.log(data)
-          } catch (error) {
-            console.error("Error fetching expenses:", error);
-          }
-        };
-    
-        fetchExpenses();
-      }, [userid, token]);
-      const deletecategory = async (userid: number, categoryid: number) => {
-        const token = localStorage.getItem("token");
-    
-       
-        if (!token) {
-          console.error("Token is missing. Redirecting to login...");
-          window.location.href = "../html/signup.html";
-          return;
-        }
-    
-        try {
-          const response = await deletedata(userid, categoryid, token);
-          console.log("Delete response:", response);
-    
-        
-          setExpense((prevExpenses) =>
-            prevExpenses.filter(
-              (expense) =>
-                !(expense.userId === userid && expense.categoryId === categoryid)
-            )
-          );
-        } catch (error) {
-          console.error("Error deleting category:", error);
-        }
-      };
+   const {
+    expense,
+    deletecategory,
+    handleEditClick,
+    isModalOpen,
+    closeModal,
+    editableExpense,
+    handleSaveChanges,
+    handleInputChange,
+  message}=Getexpense()
     return(
-    <>
-         <div className="viewdiv">
-        <h1 id="username">All Expenses</h1>
+      <>
+      {expense.length>0?(
+      <div className="viewdiv">
+        <h1 id="username">{localStorage.getItem("username")} All Expenses</h1>
         <center>
             <table id="expenstable">
                 <tr>
-                   
                     <th>category id</th>
                     <th>category name</th>
                     <th>cateory type</th>
@@ -69,49 +29,50 @@ export function Home(){
                 </tr>
                 <tbody>
                     {
-                        expense.map((expense)=>(
-                            <tr key={`${expense.userId}-${expense.categoryId}`}>
+                      expense.map((expense)=>(
+                            <tr id={`row-${expense.userId}-${expense.categoryId}`} key={`${expense.userId}-${expense.categoryId}`}>
                                 <td>{expense.categoryId}</td>
                                 <td>{expense.categoryName}</td>
                                 <td>{expense.categoryType}</td>
                                 <td>{expense.date}</td>
                                 <td>{expense.amount}</td>
-                                <td><button className="incomexpens1">Edit</button></td>
-                                <td><button className="incomexpens1" onClick={()=>deletecategory(expense.userId,expense.categoryId)}>Delete</button></td>
+                                <td><button className="incomexpens1" onClick={(e)=>handleEditClick(expense)}>Edit</button></td>
+                                <td><button className="incomexpens1" onClick={(e)=>deletecategory(expense.userId,expense.categoryId,e)}>Delete</button></td>
                             </tr>
                         ))
                     }
                 </tbody>
             </table>
         </center>
-    </div>
-    <div id="editModal" className="modal" >
+      </div>):(<></>)}
+     {isModalOpen && editableExpense && (
+       <div id="editModal" className="modal">
         <div className="modal-content viewdiv">
-            <span className="close">&times;</span>
-            <h2>Edit Expense</h2>
-            <form id="editForm">
-                <label htmlFor="userId">Enter a user ID:</label>
-                <input type="number" id="userId" readOnly required></input>
+          <span className="close" onClick={closeModal}>&times;</span>
+          <h2>Edit Expense</h2>
+          <form onSubmit={handleSaveChanges}>
+              <label htmlFor="userId">User ID:</label>
+              <input type="number" id="userId" value={editableExpense.userId} readOnly/>
 
-                <label htmlFor="categoryId">Enter a category ID:</label>
-                <input type="number" id="categoryId" readOnly required></input>
+              <label htmlFor="categoryId">Category ID:</label>
+              <input type="number" id="categoryId" value={editableExpense.categoryId} readOnly />
 
-                <label htmlFor="expense">Enter an categoryname:</label>
-                <input type="text" id="expense" required></input>
+              <label htmlFor="categoryName">Category Name:</label>
+              <input type="text" id="categoryName" value={editableExpense.categoryName} onChange={handleInputChange}/>
 
-                <label htmlFor="expense">Enter an type:</label>
-                <input type="text" id="type" required></input>
+              <label htmlFor="categoryType">Category Type:</label>
+              <input type="text" id="categoryType" value={editableExpense.categoryType} onChange={handleInputChange}/>
 
-                <label htmlFor="date">Enter a date (dd/mm/yyyy):</label>
-                <input type="text" id="date" required></input>
+              <label htmlFor="date">Date:</label>
+              <input type="date" id="date" value={editableExpense.date} onChange={handleInputChange}/>
 
-                <label htmlFor="amount">Enter an amount:</label>
-                <input type="number" id="amount" required></input>
-
-                <button type="submit" className="incomexpens">Save Changes</button>
-            </form>
+              <label htmlFor="amount">Amount:</label>
+              <input type="number" id="amount" value={editableExpense.amount} onChange={handleInputChange}/>
+              <button type="submit" className="incomexpens">Save Change</button>
+              {message && <span id="message" >{message}</span>}
+          </form>
         </div>
-    </div>
- </>
+      </div>)}
+     </>
     );
 };

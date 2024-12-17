@@ -1,87 +1,66 @@
-import React from "react";
-import {loginservice} from "../../service/loginservice"
-import "./login.css"
+import { loginservice } from "../../service/loginservice";
+import "./login.css";
 
 const Login: React.FC = () => {
-  const { activeForm,
-    username,
-    password,
-    confirmPassword,
+  const {
+    activeForm,
+    formData,
+    handleInputChange,
     errorMessage,
-    setUsername,
-    setPassword,
-    setConfirmPassword,
     showLogin,
     showSignUp,
     handleSignup,
     handleLogin,
     passwordErrorMessage,
-    usernameErrorMessage,}=loginservice()
- 
+    usernameErrorMessage,
+    loginPasswordVisible,
+    toggleLoginPasswordVisibility,
+    signupPasswordVisible,
+    toggleSignupPasswordVisibility,
+    confirmPasswordVisible,
+    toggleConfirmPasswordVisibility} = loginservice();
 
   return (
     <>
-    
-      <div className="navborder">
-        <img src="../assets/images.png" className="navimg" alt="Logo" />
-        <nav className="navtag">
-          <a href="/mainpage" className="atag">Mainpage</a>
-        </nav>
-      </div>
-
-     
-      <div className="parentdiv">
+     <div className="parentdiv">
         <div className="parentdiv1">
-         
           <div className="login">
             <div>
               <h1>LOGIN</h1>
               <h1>Your Account</h1>
               <button
                 onClick={showLogin}
-                className={activeForm === "login" ? "active-btn" : ""}
-              >
+                className={activeForm === "login" ? "active-btn" : ""}>
                 Login
               </button>
               <button
                 onClick={showSignUp}
-                className={activeForm === "signup" ? "active-btn" : ""}
-              >
+                className={activeForm === "signup" ? "active-btn" : ""}>
                 Sign Up
               </button>
             </div>
           </div>
-
-        
-         
-          <div className="formdiv ">
-         
-          {activeForm === "login" && (
-              <form id="loginForm" onSubmit={handleLogin} className="loginform active-form">
+          <div className="formdiv">
+            {activeForm === "login" && (
+              <form
+                id="loginForm"
+                onSubmit={handleLogin}
+                className="loginform active-form">
                 <h1>Login</h1>
                 <label htmlFor="username">Username</label>
-                <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                 
-                  id="signusername"
-                  className="signinput"
-                  required
-                />
+                <div className="password-container">
+                  <input type="text" name="username"  value={formData.username} onChange={handleInputChange} className="signinput" required/>
+                </div>
                 <label htmlFor="password">Password</label>
-                <input
-                   type="password"
-                   placeholder="Password"
-                   value={password}
-                   onChange={(e) => setPassword(e.target.value)}
-                
-                  id="signpassword"
-                  className="signinput"
-                  required
-                />
-                <button type="submit" className="logbut">
+                <div className="password-container">
+                  <input type={loginPasswordVisible ? "text" : "password"} name="password" value={formData.password} onChange={handleInputChange} className="signinput" required/>
+                  <span
+                    onClick={toggleLoginPasswordVisibility}
+                    className="password-toggle-icon">
+                    {loginPasswordVisible ? "🙈" : "👁️"}
+                  </span>
+                </div>
+                <button type="submit" className="incomexpens">
                   LOGIN
                 </button>
                 {errorMessage && <span className="error">{errorMessage}</span>}
@@ -94,49 +73,40 @@ const Login: React.FC = () => {
               </form>
             )}
 
-          
             {activeForm === "signup" && (
-              <form id="signUpForm" onSubmit={handleSignup} className="loginform active-form">
-                <h1>Sign Up</h1>
-                <label htmlFor="newUsername">Username</label>
-                <input type="text"
-                    placeholder="Username"
-                     value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                 
-                  className="signinput"
-                  id="logusername"
-                  required
-                />
-                {usernameErrorMessage && <span className="error">{usernameErrorMessage}</span>}
-                <label htmlFor="newPassword">Password</label>
-                <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                 
-                  className="signinput"
-                  id="logpassword"
-                  required
-                /> {passwordErrorMessage && <span className="error">{passwordErrorMessage}</span>}
-                <label htmlFor="confirmPassword">Confirm Password</label>
-                <input
-                 type="password"
-                 placeholder="Confirm Password"
-                 value={confirmPassword}
-                 onChange={(e) => setConfirmPassword(e.target.value)}
-                 
-                  className="signinput"
-                  id="conformpassword"
-                  required
-                />
-                <span id="logspan_signup"></span>
-                <button type="submit" className="logbut">
-                  SIGN UP
-                </button>
-                {errorMessage && <span className="error">{errorMessage}</span>}
-
+              <form
+                id="signUpForm"
+                onSubmit={handleSignup}
+                className="loginform active-form">
+                  <h1>Sign Up</h1>
+                  <label htmlFor="newUsername">Username</label>
+                  <div className="password-container">
+                    <input  type="text"  name="username" value={formData.username} onChange={handleInputChange}  className="signinput"  required/>
+                  </div>
+                  {usernameErrorMessage && (
+                    <span className="error">{usernameErrorMessage}</span>
+                  )}
+                  <label htmlFor="newPassword">Password</label>
+                  <div className="password-container">
+                    <input  type={signupPasswordVisible ? "text" : "password"}  name="password"  value={formData.password}  onChange={handleInputChange}  className="signinput"  required
+                    />
+                    <span onClick={toggleSignupPasswordVisibility} className="password-toggle-icon">
+                      {signupPasswordVisible ? "🔓" : "🔒"}
+                    </span>
+                  </div>
+                  {passwordErrorMessage && (<span className="error">{passwordErrorMessage}</span>)}
+                  <label htmlFor="confirmPassword">Confirm Password</label>
+                  <div className="password-container">
+                    <input type={confirmPasswordVisible ? "text" : "password"} name="confirmPassword" value={formData.confirmPassword}  onChange={handleInputChange}  className="signinput"  required
+                    />
+                    <span
+                      onClick={toggleConfirmPasswordVisibility}
+                      className="password-toggle-icon">
+                      {confirmPasswordVisible ? "🔓" : "🔒"}
+                    </span>
+                  </div>
+                  <button type="submit" className="incomexpens">SIGN UP</button>
+                  {errorMessage && <span className="error">{errorMessage}</span>}
               </form>
             )}
           </div>
